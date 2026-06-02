@@ -26,7 +26,16 @@
     background: var(--bg);
     color: var(--text);
     font-family: 'Inter', sans-serif;
-    padding: 48px 12px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .outer {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 48px 32px;
+    box-sizing: border-box;
   }
 
   h1 {
@@ -53,8 +62,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
-    max-width: 1300px;
-    margin: 0 auto;
   }
 
   .card {
@@ -246,7 +253,7 @@
   }
 
   @media (max-width: 480px) {
-    body { padding: 28px 14px; }
+    .outer { padding: 28px 14px; }
     .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .card { padding: 16px 14px; gap: 12px; }
     .price-block .amount { font-size: 1.2rem; }
@@ -260,6 +267,7 @@
 </style>
 </head>
 <body>
+<div class="outer">
 
 <h1>Тарифы пополнения</h1>
 <p class="subtitle">Платите только за скачивание готовых макетов.<br>Никаких годовых подписок.</p>
@@ -407,5 +415,6 @@
 
 <p class="footnote">* примерное количество классов рассчитано для альбомов на 5 разворотов с 25 учениками. Используйте калькулятор ниже для точного расчёта.</p>
 
+</div>
 </body>
 </html>
