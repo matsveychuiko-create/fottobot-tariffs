@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тарифы — Фотобот</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B1020;
+    --surface: #141829;
+    --surface2: #1c2236;
+    --border: #2a3050;
+    --accent: #7B61FF;
+    --accent2: #9f8fff;
+    --text: #f0f0f8;
+    --muted: #7a7a9a;
+    --green: #4ade80;
+    --check: #4ade80;
+    --cross: #3a3a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 48px 24px;
+  }
+
+  h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+  }
+
+  .card.popular {
+    border: 2px solid var(--accent);
+    background: linear-gradient(160deg, #1c2236 0%, #141829 100%);
+    position: relative;
+  }
+
+  .badge {
+    position: absolute;
+    top: -1px;
+    right: 16px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 0 0 10px 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .card-header .name {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent2);
+  }
+
+  .card-header .tagline {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .price-block {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+  .price-block .amount {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .price-block .period {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .stats {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .stat-row .label {
+    color: var(--muted);
+  }
+
+  .stat-row .value {
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .stat-row .value.accent {
+    color: var(--accent2);
+  }
+
+  .features {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+
+  .feature .icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .feature.yes .icon {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--check);
+  }
+
+  .feature.no .icon {
+    background: rgba(58, 58, 90, 0.4);
+    color: var(--cross);
+  }
+
+  .feature.yes .text {
+    color: var(--text);
+  }
+
+  .feature.no .text {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--cross);
+  }
+
+  .cta {
+    margin-top: auto;
+    display: block;
+    width: 100%;
+    padding: 11px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .cta:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .card.popular .cta {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .card.popular .cta:hover {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+
+  .footnote {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 24px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 28px 14px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card { padding: 16px 14px; gap: 12px; }
+    .price-block .amount { font-size: 1.2rem; }
+    .stat-row { font-size: 0.78rem; }
+    .feature { font-size: 0.75rem; }
+  }
+
+  @media (max-width: 360px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Тарифы пополнения</h1>
+<p class="subtitle">Платите только за скачивание готовых макетов.<br>Никаких годовых подписок.</p>
+
+<div class="grid">
+
+  <!-- СТАРТ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="name">Старт</div>
+      <div class="tagline">Для новичков</div>
+    </div>
+    <div class="price-block">
+      <div class="amount">6 950 ₽</div>
+      <div class="period">действует 1 год</div>
+    </div>
+    <div class="stats">
+      <div class="stat-row">
+        <span class="label">Стоимость разворота</span>
+        <span class="value accent">39 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Мин. вёрстка класса</span>
+        <span class="value">от 1 700 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Примерно классов</span>
+        <span class="value">≈ 3–4</span>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос 1 макета из PSD</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Свои шаблоны без лимита</span></div>
+      <div class="feature no"><div class="icon">✕</div><span class="text">Кураторство</span></div>
+      <div class="feature no"><div class="icon">✕</div><span class="text">Рассрочка</span></div>
+      <div class="feature no"><div class="icon">✕</div><span class="text">Перенос остатка на след. год</span></div>
+    </div>
+    <a href="https://fottobot.io/" class="cta">Начать бесплатно</a>
+  </div>
+
+  <!-- МИНИ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="name">Мини</div>
+      <div class="tagline">Для быстрого старта</div>
+    </div>
+    <div class="price-block">
+      <div class="amount">15 000 ₽</div>
+      <div class="period">действует 1 год</div>
+    </div>
+    <div class="stats">
+      <div class="stat-row">
+        <span class="label">Стоимость разворота</span>
+        <span class="value accent">34 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Мин. вёрстка класса</span>
+        <span class="value">от 1 500 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Примерно классов</span>
+        <span class="value">≈ 10–15</span>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос 2 макетов из PSD</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Свои шаблоны без лимита</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Кураторство включено</span></div>
+      <div class="feature no"><div class="icon">✕</div><span class="text">Рассрочка</span></div>
+      <div class="feature no"><div class="icon">✕</div><span class="text">Перенос остатка на след. год</span></div>
+    </div>
+    <a href="https://fottobot.io/" class="cta">Начать бесплатно</a>
+  </div>
+
+  <!-- МИДИ -->
+  <div class="card popular">
+    <div class="badge">Популярный</div>
+    <div class="card-header">
+      <div class="name">Миди</div>
+      <div class="tagline">Идеально для роста</div>
+    </div>
+    <div class="price-block">
+      <div class="amount">30 000 ₽</div>
+      <div class="period">переходит на 2-й год</div>
+    </div>
+    <div class="stats">
+      <div class="stat-row">
+        <span class="label">Стоимость разворота</span>
+        <span class="value accent">27 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Мин. вёрстка класса</span>
+        <span class="value">от 1 200 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Примерно классов</span>
+        <span class="value">≈ 25</span>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос 3 макетов из PSD</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Свои шаблоны без лимита</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Кураторство включено</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Рассрочка в 2 платежа</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос остатка на след. год</span></div>
+    </div>
+    <a href="https://fottobot.io/" class="cta">Начать бесплатно</a>
+  </div>
+
+  <!-- МАКСИ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="name">Макси</div>
+      <div class="tagline">Для профи</div>
+    </div>
+    <div class="price-block">
+      <div class="amount">45 000 ₽</div>
+      <div class="period">переходит на 2-й год</div>
+    </div>
+    <div class="stats">
+      <div class="stat-row">
+        <span class="label">Стоимость разворота</span>
+        <span class="value accent">20 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Мин. вёрстка класса</span>
+        <span class="value">от 900 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="label">Примерно классов</span>
+        <span class="value">≈ 50</span>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос 3 макетов из PSD</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Свои шаблоны без лимита</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Кураторство включено</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Рассрочка в 2 платежа</span></div>
+      <div class="feature yes"><div class="icon">✓</div><span class="text">Перенос остатка на след. год</span></div>
+    </div>
+    <a href="https://fottobot.io/" class="cta">Начать бесплатно</a>
+  </div>
+
+</div>
+
+<p class="footnote">* примерное количество классов рассчитано для альбомов на 5 разворотов с 25 учениками. Используйте калькулятор ниже для точного расчёта.</p>
+
+</body>
+</html>
